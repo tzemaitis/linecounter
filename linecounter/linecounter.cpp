@@ -122,16 +122,24 @@ int main(int argc, char* argv[])
 	if (argc == 2)
 		path = std::filesystem::absolute(argv[1]);
 
-	LineCounter counter;
+	if (!std::filesystem::exists(path))
+	{
+		std::cout << "Directory " << path << " does not exist." << std::endl;
+		return 1;
+	}
+	else
+	{
+		LineCounter counter;
 
-	auto start = std::chrono::system_clock::now();
+		auto start = std::chrono::system_clock::now();
 
-	auto linesCount = counter.countLines(path);
+		auto linesCount = counter.countLines(path);
 
-	std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - start;
+		std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - start;
 
-	std::cout << "elapsed time: " << elapsed_seconds << std::endl;
-	std::cout << linesCount << std::endl;
+		std::cout << "elapsed time: " << elapsed_seconds << std::endl;
+		std::cout << linesCount << std::endl;
 
-	return 0;
+		return 0;
+	}
 }
