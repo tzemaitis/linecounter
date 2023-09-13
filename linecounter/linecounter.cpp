@@ -15,14 +15,13 @@ namespace
 {
 	std::uint64_t countLinesInFile(const std::filesystem::path& path)
 	{
-		std::uint64_t result = 0;
-		std::fstream input(path);
-		std::string line;
-		while (std::getline(input, line))
+		std::ifstream input(path, std::ifstream::ate);
+		if (input.tellg() == 0)
 		{
-			++result;
+			return 0;
 		}
-		return result;
+		input.seekg(0);
+		return std::count(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>(), '\n') + 1;
 	}
 }
 
@@ -126,12 +125,12 @@ int main(int argc, char* argv[])
 	LineCounter counter;
 
 	auto start = std::chrono::system_clock::now();
+
 	auto linesCount = counter.countLines(path);
 
 	std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - start;
 
 	std::cout << "elapsed time: " << elapsed_seconds << std::endl;
-
 	std::cout << linesCount << std::endl;
 
 	return 0;
